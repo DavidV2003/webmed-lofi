@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webmed Healthcare - Lofi Prototype</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-box"></div>
+      <div>
+        <strong>Webmed Healthcare</strong>
+        <span>Prototipo de baja fidelidad</span>
+      </div>
+    </div>
+
+    <nav id="mainNav" class="hidden">
+      <button onclick="showScreen('home')">Inicio</button>
+      <button onclick="showScreen('doctors')">Doctores</button>
+      <button onclick="showScreen('medicines')">Medicamentos</button>
+      <button onclick="showScreen('cart')">Carrito</button>
+      <button onclick="logout()">Salir</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="login" class="screen active">
+      <div class="center-layout">
+        <div class="wire-card login-card">
+          <h1>Acceso al sistema</h1>
+          <p class="muted">Ingrese sus datos para acceder a los servicios de salud.</p>
+
+          <label for="email">Correo electrónico</label>
+          <input id="email" type="email" placeholder="usuario@correo.com">
+
+          <label for="password">Contraseña</label>
+          <input id="password" type="password" placeholder="Contraseña">
+
+          <button class="primary full" onclick="login()">Iniciar sesión</button>
+          <button class="secondary full" onclick="fillDemo()">Usar datos de prueba</button>
+
+          <p id="loginMessage" class="message"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="home" class="screen">
+      <h1>Panel principal</h1>
+      <p class="muted">Seleccione el servicio que desea utilizar dentro de Webmed Healthcare.</p>
+
+      <div class="dashboard-grid">
+        <article class="service-card" onclick="showScreen('doctors')">
+          <div class="icon-placeholder"></div>
+          <h2>Buscar doctores</h2>
+          <p>Consulte médicos por especialidad, ubicación y disponibilidad.</p>
+          <button>Entrar</button>
+        </article>
+
+        <article class="service-card" onclick="showScreen('medicines')">
+          <div class="icon-placeholder"></div>
+          <h2>Comprar medicamentos</h2>
+          <p>Busque medicamentos, revise disponibilidad y agregue productos al pedido.</p>
+          <button>Entrar</button>
+        </article>
+
+        <article class="service-card" onclick="showScreen('insurance')">
+          <div class="icon-placeholder"></div>
+          <h2>Seguros médicos</h2>
+          <p>Consulte planes de seguro y valide cobertura médica.</p>
+          <button>Entrar</button>
+        </article>
+
+        <article class="service-card" onclick="showScreen('ambulance')">
+          <div class="icon-placeholder"></div>
+          <h2>Ambulancia</h2>
+          <p>Solicite atención de emergencia y registre información básica.</p>
+          <button>Entrar</button>
+        </article>
+
+        <article class="service-card" onclick="showScreen('resources')">
+          <div class="icon-placeholder"></div>
+          <h2>Noticias y recursos</h2>
+          <p>Acceda a Health A-Z, calculadoras de salud y recomendaciones.</p>
+          <button>Entrar</button>
+        </article>
+
+        <article class="service-card" onclick="showScreen('notifications')">
+          <div class="icon-placeholder"></div>
+          <h2>Notificaciones</h2>
+          <p>Revise confirmaciones, alertas y mensajes del sistema.</p>
+          <button>Entrar</button>
+        </article>
+      </div>
+    </section>
+
+    <section id="doctors" class="screen">
+      <div class="screen-header">
+        <div>
+          <h1>Búsqueda de doctores</h1>
+          <p class="muted">Filtre doctores por especialidad o ciudad.</p>
+        </div>
+        <button onclick="showScreen('home')">Volver</button>
+      </div>
+
+      <div class="wire-card">
+        <div class="form-row">
+          <div>
+            <label for="doctorSearch">Buscar</label>
+            <input id="doctorSearch" type="text" placeholder="Ej: cardiología, pediatría, Toronto">
+          </div>
+          <div>
+            <label for="doctorCity">Ciudad</label>
+            <select id="doctorCity">
+              <option value="">Todas</option>
+              <option value="Kitchener">Kitchener</option>
+              <option value="Toronto">Toronto</option>
+              <option value="Waterloo">Waterloo</option>
+            </select>
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button class="primary full" onclick="filterDoctors()">Buscar</button>
+          </div>
+        </div>
+
+        <div id="doctorResults" class="results-list"></div>
+      </div>
+    </section>
+
+    <section id="medicines" class="screen">
+      <div class="screen-header">
+        <div>
+          <h1>Compra de medicamentos</h1>
+          <p class="muted">Busque productos disponibles y agréguelos al pedido.</p>
+        </div>
+        <button onclick="showScreen('home')">Volver</button>
+      </div>
+
+      <div class="two-column">
+        <div class="wire-card">
+          <div class="form-row">
+            <div>
+              <label for="medicineSearch">Buscar medicamento</label>
+              <input id="medicineSearch" type="text" placeholder="Ej: acetaminofén, ibuprofeno">
+            </div>
+            <div>
+              <label for="medicineCategory">Categoría</label>
+              <select id="medicineCategory">
+                <option value="">Todas</option>
+                <option value="Dolor">Dolor</option>
+                <option value="Alergia">Alergia</option>
+                <option value="Digestivo">Digestivo</option>
+                <option value="Vitaminas">Vitaminas</option>
+              </select>
+            </div>
+            <div>
+              <label>&nbsp;</label>
+              <button class="primary full" onclick="filterMedicines()">Buscar</button>
+            </div>
+          </div>
+
+          <div id="medicineResults" class="results-list"></div>
+        </div>
+
+        <aside class="wire-card">
+          <h2>Resumen del pedido</h2>
+          <div id="miniCart" class="mini-cart"></div>
+          <div class="total-row">
+            <span>Total</span>
+            <strong id="miniCartTotal">$0.00</strong>
+          </div>
+          <button class="primary full" onclick="showScreen('cart')">Ver carrito</button>
+        </aside>
+      </div>
+    </section>
+
+    <section id="cart" class="screen">
+      <div class="screen-header">
+        <div>
+          <h1>Carrito y pago</h1>
+          <p class="muted">Revise su pedido antes de confirmar el pago.</p>
+        </div>
+        <button onclick="showScreen('medicines')">Seguir comprando</button>
+      </div>
+
+      <div class="two-column">
+        <div class="wire-card">
+          <h2>Productos seleccionados</h2>
+          <div id="cartItems" class="cart-list"></div>
+        </div>
+
+        <aside class="wire-card">
+          <h2>Información de pago</h2>
+
+          <label for="paymentMethod">Método de pago</label>
+          <select id="paymentMethod">
+            <option value="">Seleccione</option>
+            <option value="Tarjeta débito">Tarjeta débito</option>
+            <option value="Tarjeta crédito">Tarjeta crédito</option>
+            <option value="Seguro médico">Seguro médico</option>
+          </select>
+
+          <label for="deliveryAddress">Dirección de entrega</label>
+          <input id="deliveryAddress" type="text" placeholder="Dirección del paciente">
+
+          <div class="total-row large">
+            <span>Total a pagar</span>
+            <strong id="cartTotal">$0.00</strong>
+          </div>
+
+          <button class="primary full" onclick="confirmOrder()">Confirmar pago</button>
+          <p id="paymentMessage" class="message"></p>
+        </aside>
+      </div>
+    </section>
+
+    <section id="confirmation" class="screen">
+      <div class="center-layout">
+        <div class="wire-card confirmation-card">
+          <div class="success-box"></div>
+          <h1>Pedido confirmado</h1>
+          <p>La orden fue registrada correctamente y enviada a la farmacia para su procesamiento.</p>
+
+          <div class="order-box">
+            <span>Número de orden</span>
+            <strong id="orderNumber">WEB-0000</strong>
+          </div>
+
+          <button class="primary full" onclick="resetOrder()">Volver al inicio</button>
+        </div>
+      </div>
+    </section>
+
+    <section id="insurance" class="screen">
+      <div class="screen-header">
+        <div>
+          <h1>Consulta de seguros médicos</h1>
+          <p class="muted">Pantalla lofi para consultar planes y validar cobertura.</p>
+        </div>
+        <button onclick="showScreen('home')">Volver</button>
+      </div>
+
+      <div class="wire-card">
+        <div class="form-row">
+          <div>
+            <label>Tipo de plan</label>
+            <select>
+              <option>Individual</option>
+              <option>Familiar</option>
+              <option>Emergencias</option>
+            </select>
+          </div>
+          <div>
+            <label>Proveedor</label>
+            <input type="text" placeholder="Nombre del proveedor">
+          </div>
+          <div>
+            <label>&nbsp;</label>
+            <button class="primary full">Validar cobertura</button>
+          </div>
+        </div>
+
+        <div class="placeholder-block"></div>
+        <div class="placeholder-block small"></div>
+      </div>
+    </section>
+
+    <section id="ambulance" class="screen">
+      <div class="screen-header">
+        <div>
+          <h1>Solicitud de ambulancia</h1>
+          <p class="muted">Pantalla lofi para registrar una emergencia.</p>
+        </div>
+        <button onclick="showScreen('home')">Volver</button>
+      </div>
+
+      <div class="wire-card">
+        <label>Ubicación actual</label>
+        <input type="text" placeholder="Dirección o punto de referencia">
+
+        <label>Tipo de emergencia</label>
+        <select>
+          <option>Accidente</option>
+          <option>Dificultad respiratoria</option>
+          <option>Dolor intenso</option>
+          <option>Otro</option>
+        </select>
+
+        <label>Descripción breve</label>
+        <textarea placeholder="Describa la situación"></textarea>
+
+        <button class="primary">Solicitar ambulancia</button>
+      </div>
+    </section>
+
+    <section id="resources" class="screen">
+      <div class="screen-header">
+        <div>
+          <h1>Noticias y recursos de salud</h1>
+          <p class="muted">Pantalla lofi para consultar contenido médico general.</p>
+        </div>
+        <button onclick="showScreen('home')">Volver</button>
+      </div>
+
+      <div class="dashboard-grid">
+        <article class="service-card">
+          <h2>Health A-Z</h2>
+          <p>Consulta de enfermedades y temas médicos por orden alfabético.</p>
+        </article>
+
+        <article class="service-card">
+          <h2>Verificador de síntomas</h2>
+          <p>Herramienta inicial para orientar al usuario.</p>
+        </article>
+
+        <article class="service-card">
+          <h2>Calculadoras de salud</h2>
+          <p>Recursos básicos para indicadores de salud.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="notifications" class="screen">
+      <div class="screen-header">
+        <div>
+          <h1>Notificaciones</h1>
+          <p class="muted">Mensajes y confirmaciones del sistema.</p>
+        </div>
+        <button onclick="showScreen('home')">Volver</button>
+      </div>
+
+      <div class="wire-card">
+        <div class="notification-item">Confirmación de inicio de sesión.</div>
+        <div class="notification-item">Recordatorio de consulta médica.</div>
+        <div class="notification-item">Estado del pedido de medicamentos.</div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
