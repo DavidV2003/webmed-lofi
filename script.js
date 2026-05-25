@@ -3,25 +3,33 @@ const doctors = [
     name: "Dr. Carlos Méndez",
     specialty: "Cardiología",
     city: "Kitchener",
-    availability: "Disponible hoy"
+    availability: "Disponible hoy",
+    rating: "4.8",
+    modality: "Presencial / Virtual"
   },
   {
     name: "Dra. Laura Gómez",
     specialty: "Pediatría",
     city: "Toronto",
-    availability: "Disponible mañana"
+    availability: "Disponible mañana",
+    rating: "4.9",
+    modality: "Presencial"
   },
   {
     name: "Dr. Andrés Rojas",
     specialty: "Medicina general",
     city: "Waterloo",
-    availability: "Disponible esta semana"
+    availability: "Disponible esta semana",
+    rating: "4.7",
+    modality: "Virtual"
   },
   {
     name: "Dra. Natalia Torres",
     specialty: "Dermatología",
     city: "Kitchener",
-    availability: "Disponible el viernes"
+    availability: "Disponible el viernes",
+    rating: "4.6",
+    modality: "Presencial / Virtual"
   }
 ];
 
@@ -31,39 +39,45 @@ const medicines = [
     name: "Acetaminofén 500mg",
     category: "Dolor",
     price: 8.99,
-    availability: "Disponible"
+    availability: "Disponible",
+    detail: "Analgésico de uso general"
   },
   {
     id: 2,
     name: "Ibuprofeno 400mg",
     category: "Dolor",
     price: 10.5,
-    availability: "Disponible"
+    availability: "Disponible",
+    detail: "Antiinflamatorio y analgésico"
   },
   {
     id: 3,
     name: "Loratadina 10mg",
     category: "Alergia",
     price: 12.25,
-    availability: "Disponible"
+    availability: "Disponible",
+    detail: "Antialérgico de uso diario"
   },
   {
     id: 4,
     name: "Antiácido masticable",
     category: "Digestivo",
     price: 7.75,
-    availability: "Pocas unidades"
+    availability: "Pocas unidades",
+    detail: "Alivio para acidez estomacal"
   },
   {
     id: 5,
     name: "Multivitamínico diario",
     category: "Vitaminas",
     price: 15.99,
-    availability: "Disponible"
+    availability: "Disponible",
+    detail: "Suplemento general de vitaminas"
   }
 ];
 
 let cart = [];
+let lastAppointment = "";
 
 document.addEventListener("DOMContentLoaded", () => {
   renderDoctors(doctors);
@@ -109,6 +123,7 @@ function logout() {
   document.getElementById("email").value = "";
   document.getElementById("password").value = "";
   cart = [];
+  lastAppointment = "";
   renderCart();
   showScreen("login");
 }
@@ -121,7 +136,8 @@ function filterDoctors() {
     const matchesSearch =
       doctor.name.toLowerCase().includes(search) ||
       doctor.specialty.toLowerCase().includes(search) ||
-      doctor.city.toLowerCase().includes(search);
+      doctor.city.toLowerCase().includes(search) ||
+      doctor.modality.toLowerCase().includes(search);
 
     const matchesCity = !city || doctor.city === city;
 
@@ -145,6 +161,7 @@ function renderDoctors(list) {
         <h2>${doctor.name}</h2>
         <p>${doctor.specialty}</p>
         <p>${doctor.city} - ${doctor.availability}</p>
+        <p>Modalidad: ${doctor.modality} · Calificación: ${doctor.rating}</p>
       </div>
       <button class="primary" onclick="bookDoctor('${doctor.name}')">Agendar</button>
     </div>
@@ -152,7 +169,13 @@ function renderDoctors(list) {
 }
 
 function bookDoctor(name) {
-  alert(`Solicitud de cita enviada para ${name}.`);
+  lastAppointment = `Cita solicitada correctamente con ${name}.`;
+  const container = document.getElementById("doctorResults");
+  const notice = document.createElement("div");
+
+  notice.className = "notification-item";
+  notice.textContent = lastAppointment;
+  container.prepend(notice);
 }
 
 function filterMedicines() {
@@ -162,7 +185,8 @@ function filterMedicines() {
   const filtered = medicines.filter(medicine => {
     const matchesSearch =
       medicine.name.toLowerCase().includes(search) ||
-      medicine.category.toLowerCase().includes(search);
+      medicine.category.toLowerCase().includes(search) ||
+      medicine.detail.toLowerCase().includes(search);
 
     const matchesCategory = !category || medicine.category === category;
 
@@ -184,6 +208,7 @@ function renderMedicines(list) {
     <div class="result-item">
       <div>
         <h2>${medicine.name}</h2>
+        <p>${medicine.detail}</p>
         <p>Categoría: ${medicine.category}</p>
         <p>${medicine.availability} - $${medicine.price.toFixed(2)}</p>
       </div>
@@ -227,6 +252,7 @@ function renderMiniCart() {
     <div class="mini-cart-item">
       <strong>${item.name}</strong>
       <p>Cantidad: ${item.quantity}</p>
+      <p>Subtotal: $${(item.price * item.quantity).toFixed(2)}</p>
     </div>
   `).join("");
 }
@@ -247,6 +273,7 @@ function renderCartItems() {
     <div class="cart-item">
       <div>
         <h2>${item.name}</h2>
+        <p>${item.detail}</p>
         <p>Categoría: ${item.category}</p>
         <p>Precio unitario: $${item.price.toFixed(2)}</p>
         <p>Subtotal: $${(item.price * item.quantity).toFixed(2)}</p>
